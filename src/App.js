@@ -13,12 +13,16 @@ import Map from "./Map";
 import Table from "./Table";
 import { sortData } from "./utils";
 import LineGraph from "./LineGraph";
+import "leaflet/dist/leaflet.css"
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState({});
+  const [casesType, setCasesType] = useState("cases");
+  // const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 });
+  // const [mapZoom, setMapZoom] = useState(3);
   // do not ever use a raw async function in useEffect
   useEffect(() => {
         axios.get("https://disease.sh/v3/covid-19/all").then((resp) => {
@@ -64,12 +68,29 @@ function App() {
       setCountryInfo(resp.data);
     });
   };
+
+  const onCaseType = async(ev)=>{
+    setCasesType(ev.target.value)
+  }
   // console.log(countryInfo)
   return (
     <div className="app">
       <div className="app__left">
         <div className="app__header">
           <h1>COVID-19 TRACKER</h1>
+          <FormControl className="app__dropdown">
+            <Select
+              variant="outlined"
+              onChange={onCaseType}
+              value={casesType}
+            >
+              <MenuItem value="cases">Cases</MenuItem>
+              <MenuItem value="deaths">Deaths</MenuItem>
+              <MenuItem value="recovered">Recovered</MenuItem>
+              
+            </Select>
+          </FormControl>
+
           <FormControl className="app__dropdown">
             <Select
               variant="outlined"
@@ -103,15 +124,19 @@ function App() {
             title="Deaths"
           />
         </div>
-        <Map />
+          <h1>WorldWide {casesType}</h1>
+
+        <LineGraph casesType={casesType}/>
+
+        {/* Currently facing issues with map so decided to not implement it for mean while */}
+        {/* <Map center={mapCenter}  zoom = {mapZoom} /> */}
       </div>
       <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country</h3>
           <Table countries={tableData} />
-          <h3>WorldWide new cases</h3>
+          {/* <h3>WorldWide new cases</h3> */}
         </CardContent>
-        <LineGraph />
       </Card>
     </div>
   );

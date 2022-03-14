@@ -37,6 +37,9 @@ body {
 .app__left {
   flex: 0.9;
 }
+.app__right{
+  min-width:350px;
+}
 
 .app__information > h3 {
   color: #6a5d5d;
@@ -49,7 +52,7 @@ body {
   margin-top: 1rem;
 }
 
-@media (max-width: 990px) {
+@media (max-width: 1000px) {
   .app {
     flex-direction: column;
   }
